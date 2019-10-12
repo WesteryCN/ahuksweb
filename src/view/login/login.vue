@@ -28,8 +28,8 @@
         'handleLogin',
         'getUserInfo'
       ]),
-      handleSubmit({userName, password}) {
-        this.handleLogin({userName, password}).then(res => {
+      handleSubmit({userName, password, type}) {
+        this.handleLogin({userName, password, type}).then(res => {
           this.getUserInfo().then(res => {
             this.$router.push({
               name: this.$config.homeName

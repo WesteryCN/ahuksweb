@@ -1,12 +1,13 @@
 import axios from '@/libs/api.request'
 
-export const login = ({ userName, password }) => {
+export const login = ({user, passwd, type}) => {
   const data = {
-    userName,
-    password
+    user,
+    passwd
   }
+
   return axios.request({
-    url: 'login',
+    url: type + '/login',
     data,
     method: 'post'
   })

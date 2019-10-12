@@ -14,6 +14,12 @@
         </span>
       </Input>
     </FormItem>
+    <Form-item label="请选择类别:">
+      <Radio-group v-model="form.type">
+        <Radio label="teacher">教师</Radio>
+        <Radio label="student">学生</Radio>
+      </Radio-group>
+    </Form-item>
     <FormItem>
       <Button @click="handleSubmit" type="primary" long>登录</Button>
     </FormItem>
@@ -43,8 +49,9 @@ export default {
   data () {
     return {
       form: {
-        userName: 'super_admin',
-        password: ''
+        userName: '',
+        password: '',
+        type: 'student'
       }
     }
   },
@@ -62,7 +69,8 @@ export default {
         if (valid) {
           this.$emit('on-success-valid', {
             userName: this.form.userName,
-            password: this.form.password
+            password: this.form.password,
+            type: this.form.type
           })
         }
       })
