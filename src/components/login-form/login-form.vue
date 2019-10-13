@@ -49,9 +49,9 @@ export default {
   data () {
     return {
       form: {
-        userName: '',
-        password: '',
-        type: 'student'
+        userName: '101',
+        password: '123123',
+        type: 'teacher'
       }
     }
   },

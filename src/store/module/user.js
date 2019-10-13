@@ -74,23 +74,30 @@ export default {
   },
   actions: {
     // 登录
-    handleLogin({commit}, {userName, password, type}) {
+    handleLogin ({ commit }, { userName, password, type }) {
       userName = userName.trim()
       return new Promise((resolve, reject) => {
         login({
-          userName,
-          password,
+          user: userName,
+          passwd: password,
           type
         }).then(res => {
-          const data = res.data.data
-          commit('setToken', data.token)
-          resolve()
+          if (res.data.code === '0') {
+            const data = res.data.data
+            commit('setToken', data.token)
+            // commit('setAvator', data.avator)
+            commit('setUserName', data.user)
+            commit('setUserId', data.user)
+            commit('setAccess', [type])
+            commit('setHasGetInfo', true)
+            resolve(res.data.msg)
+          } else {
+            reject(res.data.msg)
+          }
         }).catch(err => {
           reject(err)
         })
       })
-
-
     },
     // 退出登录
     handleLogOut ({ state, commit }) {
