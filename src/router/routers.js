@@ -78,7 +78,7 @@ export default [
           icon: 'ios-person',
           title: '教师管理'
         },
-        component: () => import('@/view/components/tree-select/index.vue')
+        component: () => import('@/view/teacher-manage/teacher.vue')
       }
     ]
   },
