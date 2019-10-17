@@ -16,6 +16,16 @@ export const getToken = () => {
   else return false
 }
 
+export const setType = (type) => {
+  Cookies.set('type', type, { expires: cookieExpires || 1 })
+}
+
+export const getType = () => {
+  const type = Cookies.get('type')
+  if (type) return type
+  else return false
+}
+
 export const hasChild = (item) => {
   return item.children && item.children.length !== 0
 }

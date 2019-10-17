@@ -75,6 +75,7 @@ export default [
         path: 'page',
         name: 't_page',
         meta: {
+          access: ['teacher'],
           icon: 'ios-person',
           title: '教师管理'
         },
@@ -95,8 +96,30 @@ export default [
         path: 'page',
         name: 's_page',
         meta: {
+          access: ['teacher'],
           icon: 'ios-body',
           title: '学生管理'
+        },
+        component: () => import('@/view/student-manage/student.vue')
+      }
+    ]
+  },
+  {
+    path: '/exam',
+    name: 'exam',
+    meta: {
+      access: ['teacher'],
+      hideInBread: true
+    },
+    component: Main,
+    children: [
+      {
+        path: 'page',
+        name: 'exam_page',
+        meta: {
+          access: ['teacher'],
+          icon: 'ios-paper',
+          title: '考试管理'
         },
         component: () => import('@/view/components/tree-select/index.vue')
       }
@@ -115,28 +138,9 @@ export default [
         path: 'page',
         name: 'problem_page',
         meta: {
+          access: ['teacher'],
           icon: 'ios-pricetags',
           title: '试题管理'
-        },
-        component: () => import('@/view/components/tree-select/index.vue')
-      }
-    ]
-  },
-  {
-    path: '/exam',
-    name: 'exam',
-    meta: {
-      access: ['teacher'],
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'page',
-        name: 'exam_page',
-        meta: {
-          icon: 'ios-paper',
-          title: '考试管理'
         },
         component: () => import('@/view/components/tree-select/index.vue')
       }
@@ -155,6 +159,7 @@ export default [
         path: 'page',
         name: 'grade_page',
         meta: {
+          access: ['teacher'],
           icon: 'ios-podium',
           title: '成绩管理'
         },
@@ -175,6 +180,7 @@ export default [
         path: 'page',
         name: 'my_exam_page',
         meta: {
+          access: ['student'],
           icon: 'ios-paper',
           title: '我的考试'
         },
@@ -195,6 +201,7 @@ export default [
         path: 'page',
         name: 'score_page',
         meta: {
+          access: ['student'],
           icon: 'ios-podium',
           title: '我的成绩'
         },

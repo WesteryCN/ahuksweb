@@ -31,9 +31,11 @@ export default {
     handleSubmit ({ userName, password, type }) {
       this.handleLogin({ userName, password, type }).then(res => {
         this.$Message.info(res)
-        this.$router.push({
-          name: this.$config.homeName
-        })
+        this.getUserInfo({ type }).then(
+          this.$router.push({
+            name: this.$config.homeName
+          })
+        )
       }).catch(res => {
         this.$Message.info(res)
       })

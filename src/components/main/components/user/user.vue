@@ -2,7 +2,8 @@
   <div class="user-avator-dropdown">
     <Dropdown @on-click="handleClick">
       <Badge :dot="!!messageUnreadCount">
-        <Avatar :src="userAvator"/>
+<!--        <Avatar :src="userAvator"/>-->
+        <h4>{{userName}}</h4>
       </Badge>
       <Icon :size="18" type="md-arrow-dropdown"></Icon>
       <DropdownMenu slot="list">
@@ -25,6 +26,7 @@ export default {
       type: String,
       default: ''
     },
+    userName: '',
     messageUnreadCount: {
       type: Number,
       default: 0

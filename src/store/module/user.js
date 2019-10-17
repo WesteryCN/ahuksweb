@@ -9,14 +9,16 @@ import {
   restoreTrash,
   getUnreadCount
 } from '@/api/user'
-import { setToken, getToken } from '@/libs/util'
+import { setToken, getToken, setType, getType } from '@/libs/util'
 
 export default {
   state: {
     userName: '',
     userId: '',
+    userNumber: '',
     avatorImgPath: '',
     token: getToken(),
+    type: getType(),
     access: '',
     hasGetInfo: false,
     unreadCount: 0,
@@ -41,6 +43,13 @@ export default {
     setToken (state, token) {
       state.token = token
       setToken(token)
+    },
+    setType (state, type) {
+      state.type = type
+      setType(type)
+    },
+    setUserNumber (state, number) {
+      state.userNumber = number
     },
     setHasGetInfo (state, status) {
       state.hasGetInfo = status
@@ -85,11 +94,12 @@ export default {
           if (res.data.code === '0') {
             const data = res.data.data
             commit('setToken', data.token)
+            commit('setType', type)
             // commit('setAvator', data.avator)
-            commit('setUserName', data.user)
-            commit('setUserId', data.user)
-            commit('setAccess', [type])
-            commit('setHasGetInfo', true)
+            // commit('setUserName', data.user)
+            // commit('setUserId', data.user)
+            // commit('setAccess', [type])
+            // commit('setHasGetInfo', true)
             resolve(res.data.msg)
           } else {
             reject(res.data.msg)
@@ -105,6 +115,7 @@ export default {
         logout(state.token).then(() => {
           commit('setToken', '')
           commit('setAccess', [])
+          commit('setType', '')
           resolve()
         }).catch(err => {
           reject(err)
@@ -116,17 +127,22 @@ export default {
       })
     },
     // 获取用户相关信息
-    getUserInfo ({ state, commit }) {
+    getUserInfo ({ state, commit }, { type }) {
       return new Promise((resolve, reject) => {
         try {
-          getUserInfo(state.token).then(res => {
-            const data = res.data
-            commit('setAvator', data.avator)
-            commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
-            commit('setHasGetInfo', true)
-            resolve(data)
+          getUserInfo(type).then(res => {
+            if (res.data.code === '0') {
+              const data = res.data.data
+              // commit('setAvator', data.avator)
+              commit('setUserName', data.name)
+              commit('setUserId', data.t_id)
+              commit('setUserNumber', data.t_number)
+              commit('setAccess', [type])
+              commit('setHasGetInfo', true)
+              resolve(data)
+            } else {
+              reject(res.data.msg)
+            }
           }).catch(err => {
             reject(err)
           })
