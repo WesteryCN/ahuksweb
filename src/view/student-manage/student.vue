@@ -16,16 +16,17 @@
 <!--          <ListItemMeta :title="student.s_name" :description="'学号：'+student.s_number"></ListItemMeta>-->
           <template slot="action">
             <li>
-              <a >详细信息</a>
+              <a @click="detail_modal=true">详细信息</a>
+              <modal v-model="detail_modal" ></modal>
             </li>
             <li>
-              <a>删除</a>
-              <modal title="删除">您确定要删除吗？</modal>
+              <a @click="del_modal=true">删除</a>
+              <modal title="删除" v-model="del_modal">您确定要删除吗？</modal>
             </li>
           </template>
         </list-item>
         <template slot="footer">
-          <Page :total="student_list.length" :page-size="page_size" :current="cur_page" @on-change="change_page"/>
+<!--          <Page :total="student_list.length" :page-size="page_size" :current="cur_page" @on-change="change_page"/>-->
         </template>
       </list>
     </panel>
@@ -44,6 +45,8 @@ export default {
       page_size: 30,
       cur_page: 1,
       loading_stu: false,
+      del_modal: false,
+      detail_modal: false,
       classes: {
         1: [{
           // class_name: '123',

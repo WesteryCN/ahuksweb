@@ -98,7 +98,7 @@ export default [
         meta: {
           access: ['teacher'],
           icon: 'ios-body',
-          title: '学生管理'
+          title: '班级和学生管理'
         },
         component: () => import('@/view/student-manage/student.vue')
       }
@@ -119,33 +119,33 @@ export default [
         meta: {
           access: ['teacher'],
           icon: 'ios-paper',
-          title: '考试管理'
+          title: '考试和考题管理'
         },
-        component: () => import('@/view/components/tree-select/index.vue')
+        component: () => import('@/view/exam-manage/exam.vue')
       }
     ]
   },
-  {
-    path: '/problem',
-    name: 'problem',
-    meta: {
-      access: ['teacher'],
-      hideInBread: true
-    },
-    component: Main,
-    children: [
-      {
-        path: 'page',
-        name: 'problem_page',
-        meta: {
-          access: ['teacher'],
-          icon: 'ios-pricetags',
-          title: '试题管理'
-        },
-        component: () => import('@/view/components/tree-select/index.vue')
-      }
-    ]
-  },
+  // {
+  //   path: '/problem',
+  //   name: 'problem',
+  //   meta: {
+  //     access: ['teacher'],
+  //     hideInBread: true
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'page',
+  //       name: 'problem_page',
+  //       meta: {
+  //         access: ['teacher'],
+  //         icon: 'ios-pricetags',
+  //         title: '试题管理'
+  //       },
+  //       component: () => import('@/view/components/tree-select/index.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/grade',
     name: 'grade',

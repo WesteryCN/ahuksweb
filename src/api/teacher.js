@@ -31,3 +31,23 @@ export const getStudent = function (c_id) {
     method: 'post'
   })
 }
+
+export const getExam = function (exam_id = null) {
+  return axios.request({
+    url: prefix + '/listexam',
+    data: {
+      exam_id
+    },
+    method: 'post'
+  })
+}
+
+export const getProblem = function (exam_id) {
+  return axios.request({
+    url: prefix + '/listques',
+    data: {
+      exam_id
+    },
+    method: 'post'
+  })
+}
