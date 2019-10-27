@@ -84,11 +84,14 @@ export default {
       getStudent(cid).then((res) => {
         if (res.data.code === '0') {
           this.students = res.data.data
-        } else this.$Message.info('获取学生列表失败')
+        } else {
+          this.$Message.info('获取学生列表失败')
+        }
+        this.loading_stu = false
       }).catch(() => {
         this.$Message.info('获取学生列表失败')
+        this.loading_stu = false
       })
-      this.loading_stu = false
     },
     list_exam: function (class_id) {
       this.del_class_id = class_id

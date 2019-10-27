@@ -184,7 +184,16 @@ export default [
           icon: 'ios-paper',
           title: '我的考试'
         },
-        component: () => import('@/view/components/tree-select/index.vue')
+        component: () => import('@/view/my-exam/exam.vue')
+      },
+      {
+        path: ':id',
+        name: 'enter_exam',
+        meta: {
+          access: ['student'],
+          hideInMenu: true
+        },
+        component: () => import('@/view/exam-page/index.vue')
       }
     ]
   },
