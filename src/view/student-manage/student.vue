@@ -4,7 +4,21 @@
     <panel v-for="item in class_list" :key="item.id" :name="item.id">
       <span>{{item.class_name}}</span>
       <span style="float: right;padding-right: 10%">创建教师：{{item.t_name}}</span>
-      <list slot="content" :loading="loading_stu">
+      <div slot="content">
+        <Button type="info" @click="list_exam(item.id)">开启考试</Button>
+        <modal v-model="list_exam_modal" :loading="list_exam_loading" @on-ok="submit_list_exam(del_class_id)">
+<!--          <Form :label-width="120" >-->
+<!--            <form-item label="本班参加的考试">-->
+          <h3>本班参加的考试</h3>
+          <Divider />
+              <checkbox-group v-model="selected_exams">
+                <checkbox v-for="(name, key) in exam_list" :key="key" :label="key">{{name}}</checkbox>
+              </checkbox-group>
+<!--            </form-item>-->
+<!--          </Form>-->
+        </modal>
+        <Divider />
+      <list :loading="loading_stu">
         <template slot="header">
           <div style="display: flex; align-items: flex-start; width: 100%">
             <h3 style="width: 100%;">学生列表</h3>
@@ -29,6 +43,7 @@
 <!--          <Page :total="student_list.length" :page-size="page_size" :current="cur_page" @on-change="change_page"/>-->
         </template>
       </list>
+      </div>
     </panel>
   </collapse>
   </card>
@@ -36,7 +51,8 @@
 </template>
 
 <script>
-import { getClasses, getStudent } from '../../api/teacher'
+import { getClasses, getStudent, getExam, getClassExam, addClassExam, delClassExam } from '../../api/teacher'
+import { arrSubtraction } from '../../libs/util'
 
 export default {
   name: 'student',
@@ -47,25 +63,18 @@ export default {
       loading_stu: false,
       del_modal: false,
       detail_modal: false,
+      list_exam_modal: false,
+      list_exam_loading: true,
+      del_class_id: 0,
       classes: {
         1: [{
-          // class_name: '123',
-          // t_name: 'abc'
         }]
       },
-      students: {
-        // '5': [
-        //   {
-        //     's_number': 'E104',
-        //     's_name': '樊梓林3',
-        //     'class_id': 2,
-        //     'sex': 1,
-        //     'grade': 2017,
-        //     'academy': '计算机科学与技术',
-        //     'email': null
-        //   }
-        // ]
-      }
+      students: {},
+      exam_list: {},
+      class_exams: [],
+      selected_exams: [],
+      deleted_exams: []
     }
   },
   methods: {
@@ -80,6 +89,66 @@ export default {
         this.$Message.info('获取学生列表失败')
       })
       this.loading_stu = false
+    },
+    list_exam: function (class_id) {
+      this.del_class_id = class_id
+      getClassExam(class_id).then(
+        (res) => {
+          if (res.data.code === '0') {
+            let exams = res.data.data.exam
+            for (let key in exams) {
+              this.class_exams.push(String(exams[key][0].exam_info[0].id))
+              this.selected_exams.push(String(exams[key][0].exam_info[0].id))
+            }
+          }
+        }
+      )
+      this.list_exam_modal = true
+    },
+    submit_list_exam: function (class_id) {
+      new Promise((resolve, reject) => {
+        let arr = arrSubtraction(this.selected_exams, this.class_exams)
+        if (arr.length === 0) resolve()
+        for (let exam_id of arr) {
+          addClassExam({ class_id, exam_id }).then(
+            (res) => {
+              if (res.data.code !== '0') {
+                reject(new Error('error'))
+              } else {
+                if (exam_id === arr[arr.length - 1]) {
+                  resolve()
+                }
+              }
+            }
+          ).catch(() => {
+            reject(new Error('error'))
+          })
+        }
+      }).then(() => {
+        let arr = arrSubtraction(this.class_exams, this.selected_exams)
+        if (arr.length === 0) {
+          this.list_exam_modal = false
+          this.$Message.info('考试更新成功')
+        }
+        for (let exam_id of arr) {
+          delClassExam({ class_id, exam_id }).then(
+            (res) => {
+              if (res.data.code !== '0') {
+                this.$Message.info('考试更新失败')
+                this.list_exam_modal = false
+              } else {
+                if (exam_id === arr[arr.length - 1]) {
+                  this.list_exam_modal = false
+                  this.$Message.info('考试更新成功')
+                }
+              }
+            }
+          ).catch(() => {
+            this.$Message.info('考试更新失败')
+            this.list_exam_modal = false
+          })
+        }
+      })
     }
   },
   computed: {
@@ -100,6 +169,12 @@ export default {
       return list
     }
   },
+  watch: {
+    list_exam_modal: function () {
+      this.class_exams = []
+      this.selected_exams = []
+    }
+  },
   mounted: function () {
     getClasses({}).then((res) => {
       if (res.data.code === '0') {
@@ -110,6 +185,16 @@ export default {
     }).catch(() => {
       this.$Message.info('获取班级列表失败')
     })
+    getExam().then((res) => {
+      if (res.data.code === '0') {
+        let exams = res.data.data
+        let list = {}
+        for (let key in exams) {
+          list[exams[key][0].id] = exams[key][0].name
+        }
+        this.exam_list = list
+      }
+    }).catch()
   }
 
 }

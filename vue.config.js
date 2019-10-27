@@ -44,7 +44,8 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'https://t.2git.cn:9093',
+        // target: 'https://t.2git.cn:9093',
+        target: 'http://git.westery.cn:9092',
         changeOrigin: true
       }
     }

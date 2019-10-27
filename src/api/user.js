@@ -18,14 +18,14 @@ export const getUserInfo = (type) => {
     // params: {
     //   token
     // },
-    method: 'post'
+    method: 'get'
   })
 }
 
-export const logout = (token) => {
+export const logout = (type) => {
   return axios.request({
-    url: 'logout',
-    method: 'post'
+    url: type + '/logout',
+    method: 'get'
   })
 }
 

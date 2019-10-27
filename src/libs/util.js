@@ -407,3 +407,17 @@ export const setTitle = (routeItem, vm) => {
   const resTitle = pageTitle ? `${title} - ${pageTitle}` : title
   window.document.title = resTitle
 }
+
+/**
+   * 数组相减的方法 - 使用es新特性
+   * @param {Array} a
+   * @param {Array} b
+   */
+export const arrSubtraction = function (a, b) {
+  if (!a || !b || Object.prototype.toString.call(a) !== '[object Array]' || Object.prototype.toString.call(b) !== '[object Array]') {
+    console.error('arrSubtraction(): Param Type Err')
+    return false
+  }
+
+  return a.filter(i => !b.includes(i))
+}
