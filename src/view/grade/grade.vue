@@ -53,11 +53,11 @@ export default {
         },
         {
           title: '选择题分数',
-          key: 'score1'
+          key: 'score2'
         },
         {
           title: '填空题分数',
-          key: 'score2'
+          key: 'score1'
         },
         {
           title: '总分',

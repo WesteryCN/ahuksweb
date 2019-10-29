@@ -3,7 +3,7 @@
     <template slot="title" >
     <div style="display: flex;">
       <h2 style="width: 100%">班级列表</h2>
-      <Button @click="add_class_modal=true" >添加班级</Button>
+      <Button @click="add_class_modal=true" type="info">添加班级</Button>
       <modal v-model="add_class_modal" :loading="loading_add_class" @on-ok="submit_add_class">
         <br><br>
         <Form :model="new_class" :label-width="100" >
@@ -17,7 +17,7 @@
       <span>{{item.class_name}}</span>
       <span style="float: right;padding-right: 10%">创建教师：{{item.t_name}}</span>
       <div slot="content">
-        <Button type="info" @click="list_exam(item.id)">开启考试</Button>
+        <Button type="primary" @click="list_exam(item.id)">开启考试</Button>
         <modal v-model="list_exam_modal" :loading="list_exam_loading" @on-ok="submit_list_exam(del_class_id)">
 <!--          <Form :label-width="120" >-->
 <!--            <form-item label="本班参加的考试">-->
@@ -36,7 +36,7 @@
         <template slot="header">
           <div style="display: flex; align-items: flex-start; width: 100%">
             <h3 style="width: 100%;">学生列表</h3>
-            <Button @click="add_stu_modal=true">添加学生</Button>
+            <Button @click="add_stu_modal=true" type="info">添加学生</Button>
             <modal v-model="add_stu_modal" :loading="add_stu_loading" @on-ok="submit_add_stu">
               <br><br>
               <Form :model="new_stu" :label-width="100" style="width: 80%">
@@ -295,6 +295,9 @@ export default {
     },
     add_class_modal: function () {
       this.new_class = {}
+    },
+    add_stu_modal: function () {
+      this.new_stu = {}
     }
   },
   mounted: function () {

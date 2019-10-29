@@ -3,7 +3,7 @@
     <template slot="title" >
       <div style="display: flex;">
     <h2 style="width: 100%">考试列表</h2>
-    <Button @click="add_exam_modal=true" >添加考试</Button></div>
+    <Button @click="add_exam_modal=true" type="info">添加考试</Button></div>
       <modal v-model="add_exam_modal" :loading="loading_add_exam" @on-ok="submit_add_exam">
         <br><br>
         <Form :model="new_exam" :label-width="100" >
@@ -36,7 +36,7 @@
           <template slot="header">
             <div style="display: flex; align-items: flex-start; width: 100%">
               <h3 style="width: 100%;">试题列表</h3>
-              <Button @click="add_pro">添加试题</Button>
+              <Button @click="add_pro" type="info">添加试题</Button>
               <modal v-model="add_pro_modal" :loading="loading_add_pro" @on-ok="submit_add_pro">
                 <Form :model="new_problem" :label-width="100" >
                   <form-item label="序号" style="width: 30%" required><Input v-model="new_problem.q_rank"></Input></form-item>

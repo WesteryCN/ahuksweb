@@ -47,8 +47,8 @@ export default {
         (res) => {
           if (res.data.code === '0') {
             let score = res.data.data
-            this.$set(this.scores, 0, score.score1)
-            this.$set(this.scores, 1, score.score2)
+            this.$set(this.scores, 0, score.score2)
+            this.$set(this.scores, 1, score.score1)
             this.$set(this.scores, 2, score.total_score)
             // debugger
             // console.log(that)
@@ -82,6 +82,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="less">
+  .count-style{
+    font-size: 50px;
+  }
 </style>
