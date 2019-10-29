@@ -52,7 +52,7 @@ export default [
       {
         path: '/home',
         name: 'home',
-        component: () => import('@/view/single-page/home'),
+        component: () => import('@/view/home/home.vue'),
         meta: {
           hideInMenu: true,
           title: '首页',
@@ -163,7 +163,7 @@ export default [
           icon: 'ios-podium',
           title: '成绩管理'
         },
-        component: () => import('@/view/components/tree-select/index.vue')
+        component: () => import('@/view/grade/grade.vue')
       }
     ]
   },
@@ -214,7 +214,7 @@ export default [
           icon: 'ios-podium',
           title: '我的成绩'
         },
-        component: () => import('@/view/components/tree-select/index.vue')
+        component: () => import('@/view/score/score.vue')
       }
     ]
   },

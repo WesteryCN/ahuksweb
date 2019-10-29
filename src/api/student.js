@@ -43,3 +43,13 @@ export const endAsk = function (exam_id, cheat, stu_ans) {
     method: 'post'
   })
 }
+
+export const getScore = function (exam_id) {
+  return axios.request({
+    url: prefix + '/getmyscore',
+    data: {
+      exam_id
+    },
+    method: 'post'
+  })
+}

@@ -81,11 +81,12 @@ export const addProblem = function (data) {
   })
 }
 
-export const getClassExam = function (class_id) {
+export const getClassExam = function (class_id = null, exam_id = null) {
   return axios.request({
     url: prefix + '/listlink',
     data: {
-      class_id
+      class_id,
+      exam_id
     },
     method: 'post'
   })
@@ -108,6 +109,61 @@ export const delClassExam = function ({ class_id, exam_id }) {
     data: {
       class_id,
       exam_id
+    },
+    method: 'post'
+  })
+}
+
+export const addExam = function (data) {
+  return axios.request({
+    url: prefix + '/addexam',
+    data,
+    method: 'post'
+  })
+}
+
+export const getScore = function (class_id, exam_id) {
+  return axios.request({
+    url: prefix + '/gettotalscore',
+    data: {
+      class_id,
+      exam_id
+    },
+    method: 'post'
+  })
+}
+
+export const addClass = function (data) {
+  return axios.request({
+    url: prefix + '/addclass',
+    data,
+    method: 'post'
+  })
+}
+
+export const delClass = function (c_id) {
+  return axios.request({
+    url: prefix + '/delclass',
+    data: {
+      c_id
+    },
+    method: 'post'
+  })
+}
+
+export const addStu = function (data) {
+  return axios.request({
+    url: prefix + '/addstd',
+    data,
+    method: 'post'
+  })
+}
+
+export const delStu = function (std_user) {
+  return axios.request({
+    url: prefix + '/delstd',
+    data: {
+      std_user
     },
     method: 'post'
   })

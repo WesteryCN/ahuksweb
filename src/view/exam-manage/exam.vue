@@ -1,15 +1,31 @@
 <template>
-  <card :bordered="false"><h2 slot="title">考试列表</h2>
-    <collapse accordion @on-change="open_exam">
+  <card :bordered="false">
+    <template slot="title" >
+      <div style="display: flex;">
+    <h2 style="width: 100%">考试列表</h2>
+    <Button @click="add_exam_modal=true" >添加考试</Button></div>
+      <modal v-model="add_exam_modal" :loading="loading_add_exam" @on-ok="submit_add_exam">
+        <br><br>
+        <Form :model="new_exam" :label-width="100" >
+          <form-item label="考试名称" required><Input v-model="new_exam.exam_name"></Input></form-item>
+          <form-item label="地点" required><Input v-model="new_exam.place"></Input></form-item>
+          <form-item label="开始时间" required><date-picker type="datetime" @on-change="set_start_at"></date-picker></form-item>
+          <form-item label="结束时间" required><date-picker type="datetime" @on-change="set_end_at"></date-picker></form-item>
+          <form-item label="总分" required><Input v-model="new_exam.total_score"></Input></form-item>
+          <form-item label="备注" required><Input v-model="new_exam.note"></Input></form-item>
+        </Form>
+      </modal>
+    </template>
+    <collapse accordion @on-change="open_exam" v-model="selected_exam">
       <panel v-for="item in exam_list" :key="item.id" :name="item.id">
         <span>{{item.name}}</span>
         <div slot="content">
           <row>
             <Col span="20">
-            <tag>地点：{{item.place}}</tag>
-            <tag>开始时间：{{item.start_at}}</tag>
-            <tag>结束时间：{{item.end_at}}</tag>
-            <tag>备注：{{item.note}}</tag>
+            <tag color="magenta">地点：{{item.place}}</tag>
+            <tag color="orange">开始时间：{{item.start_at}}</tag>
+            <tag color="green">结束时间：{{item.end_at}}</tag>
+            <tag color="blue">备注：{{item.note}}</tag>
             </Col>
           <Col span="4">
             <Button type="error" style="float: right">删除考试</Button>
@@ -20,8 +36,8 @@
           <template slot="header">
             <div style="display: flex; align-items: flex-start; width: 100%">
               <h3 style="width: 100%;">试题列表</h3>
-              <Button @click="add_pro(item.id)">添加试题</Button>
-              <modal v-model="add_pro_modal" :loading="loading_add_pro" @on-ok="submit_add_pro(item.id)">
+              <Button @click="add_pro">添加试题</Button>
+              <modal v-model="add_pro_modal" :loading="loading_add_pro" @on-ok="submit_add_pro">
                 <Form :model="new_problem" :label-width="100" >
                   <form-item label="序号" style="width: 30%" required><Input v-model="new_problem.q_rank"></Input></form-item>
                   <form-item label="题目类型" required><RadioGroup v-model="new_problem.q_type">
@@ -78,8 +94,8 @@
                 </modal>
               </li>
               <li>
-                <a @click="del_pro_modal=true">删除</a>
-                <modal title="删除" v-model="del_pro_modal" @on-ok="del_problem(item.id,problem_detail.q_rank)" :loading="loading_del_pro">您确定要删除吗？</modal>
+                <a @click="del_pro(problem.q_rank)">删除</a>
+                <modal title="删除" v-model="del_pro_modal" @on-ok="del_problem" :loading="loading_del_pro">您确定要删除吗？</modal>
               </li>
             </template>
           </list-item>
@@ -95,7 +111,7 @@
 </template>
 
 <script>
-import { getExam, getProblem, delProblem, getLeftScore, addProblem } from '../../api/teacher'
+import { getExam, getProblem, delProblem, getLeftScore, addProblem, addExam } from '../../api/teacher'
 
 export default {
   name: 'exam',
@@ -105,13 +121,18 @@ export default {
       add_pro_modal: false,
       del_pro_modal: false,
       detail_modal: false,
+      add_exam_modal: false,
       loading_del_pro: true,
       loading_add_pro: true,
+      loading_add_exam: true,
       new_problem: {},
       exams: {},
       problems: {},
       problem_detail: {},
+      new_exam: {},
       left_mark: 0,
+      selected_exam: [],
+      selected_q_rank: 0,
       types: {
         1: '填空',
         2: '选择'
@@ -133,11 +154,18 @@ export default {
       })
       this.loading_stu = false
     },
+    del_pro: function (q_rank) {
+      this.selected_q_rank = q_rank
+      this.del_pro_modal = true
+    },
     q_detail: function (id) {
       this.problem_detail = this.problem_list[id]
       this.detail_modal = true
     },
-    del_problem: function (exam_id, q_rank) {
+    del_problem: function () {
+      // debugger
+      let exam_id = this.selected_exam[0]
+      let q_rank = this.selected_q_rank
       delProblem({ exam_id, q_rank }).then(
         (res) => {
           if (res.data.code === '0') {
@@ -172,9 +200,9 @@ export default {
       delete this.new_problem.q_answers
       this.$set(this.new_problem, 'q_answers', a)
     },
-    add_pro: function (id) {
+    add_pro: function () {
       this.add_pro_modal = true
-      getLeftScore(id).then(
+      getLeftScore(this.selected_exam[0]).then(
         (res) => {
           if (res.data.code === '0') {
             this.left_mark = res.data.data.left_score
@@ -182,13 +210,13 @@ export default {
         }
       )
     },
-    submit_add_pro: function (exam_id) {
-      this.new_problem.exam_id = exam_id
+    submit_add_pro: function () {
+      this.new_problem.exam_id = this.selected_exam[0]
       addProblem(this.new_problem).then((res) => {
         if (res.data.code === '0') {
           this.$Message.info('添加成功')
           this.add_pro_modal = false
-          this.open_exam(exam_id)
+          this.open_exam(this.selected_exam[0])
         } else {
           this.$Message.info('添加失败')
           // this.add_pro_modal = false
@@ -197,6 +225,38 @@ export default {
         this.$Message.info('添加失败')
         // this.add_pro_modal = false
       })
+    },
+    submit_add_exam: function () {
+      // this.new_exam.start_at = (this.new_exam.start_at).format('yyyy-MM-dd HH:mm:ss')
+      // this.new_exam.end_at = (this.new_exam.end_at).format('yyyy-MM-dd HH:mm:ss')
+      addExam(this.new_exam).then((res) => {
+        if (res.data.code === '0') {
+          this.$Message.info('添加成功')
+          this.add_exam_modal = false
+          this.refreshExam()
+        } else {
+          this.$Message.info('添加失败')
+        }
+      }).catch(() => {
+        this.$Message.info('添加失败')
+      })
+    },
+    refreshExam: function () {
+      getExam({}).then((res) => {
+        if (res.data.code === '0') {
+          this.exams = res.data.data
+        } else {
+          this.$Message.info('获取考试列表失败')
+        }
+      }).catch(() => {
+        this.$Message.info('获取考试列表失败')
+      })
+    },
+    set_start_at: function (t) {
+      this.new_exam.start_at = t
+    },
+    set_end_at: function (t) {
+      this.new_exam.end_at = t
     }
   },
   computed: {
@@ -226,15 +286,7 @@ export default {
     }
   },
   mounted: function () {
-    getExam({}).then((res) => {
-      if (res.data.code === '0') {
-        this.exams = res.data.data
-      } else {
-        this.$Message.info('获取考试列表失败')
-      }
-    }).catch(() => {
-      this.$Message.info('获取考试列表失败')
-    })
+    this.refreshExam()
   }
 }
 </script>
