@@ -45,7 +45,7 @@ module.exports = {
     proxy: {
       '/api': {
         // target: 'https://t.2git.cn:9093',
-        target: 'http://git.westery.cn:9092',
+        target: 'https://t.2git.cn',
         changeOrigin: true
       }
     }

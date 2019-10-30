@@ -56,8 +56,18 @@
 <!--          <ListItemMeta :title="student.s_name" :description="'学号：'+student.s_number"></ListItemMeta>-->
           <template slot="action">
             <li>
-              <a @click="detail_modal=true">详细信息</a>
-              <modal v-model="detail_modal" ></modal>
+              <a @click="stu_detail(id)">详细信息</a>
+              <modal v-model="detail_modal" >
+                <br>
+                <Form :model="student" :label-width="100" >
+                  <form-item label="学号"><span>{{student_detail.s_number}}</span></form-item>
+                  <form-item label="姓名"><span>{{student_detail.s_name}}</span></form-item>
+                  <form-item label="性别"><span>{{types[student_detail.sex]}}</span></form-item>
+                  <form-item label="年级"><span>{{student_detail.grade}}</span></form-item>
+                  <form-item label="学院"><span>{{student_detail.academy}}</span></form-item>
+                  <form-item label="email"><span>{{student_detail.email}}</span></form-item>
+                </Form>
+              </modal>
             </li>
             <li>
               <a @click="del_stu(student.s_number)">删除</a>
@@ -120,7 +130,12 @@ export default {
       selected_exams: [],
       deleted_exams: [],
       new_class: {},
-      new_stu: {}
+      new_stu: {},
+      student_detail: {},
+      types: {
+        '0': '男',
+        '1': '女'
+      }
     }
   },
   methods: {
@@ -268,6 +283,10 @@ export default {
         this.$Message.info('删除失败')
         this.del_modal = false
       })
+    },
+    stu_detail: function (id) {
+      this.student_detail = this.student_list[id]
+      this.detail_modal = true
     }
   },
   computed: {
